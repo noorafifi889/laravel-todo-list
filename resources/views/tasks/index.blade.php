@@ -203,7 +203,7 @@
             class="mt-4 mx-2 bg-primary text-on-primary py-3 px-4 rounded-lg font-label-md text-label-md flex items-center justify-center gap-2 cursor-pointer active:scale-95 transition-transform">
             <span class="material-symbols-outlined text-[18px]">add</span>
             Create Task
-    </a>
+        </a>
         <div class="mt-auto pt-stack-lg border-t border-outline-variant space-y-1">
             <a class="flex items-center px-4 py-3 text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all duration-200 rounded-lg"
                 href="#">
@@ -261,7 +261,7 @@
                         class="px-4 py-2 bg-primary text-on-primary rounded-lg font-label-md text-label-md flex items-center gap-2 hover:opacity-90 active:scale-95 transition-all shadow-md">
                         <span class="material-symbols-outlined text-[18px]">add</span>
                         Add Task
-                </a>
+                    </a>
                 </div>
             </div>
             <!-- Filters / Chips -->
@@ -292,59 +292,65 @@
                 <!-- Main Task List Column -->
                 <div class="col-span-12 lg:col-span-8 space-y-4">
                     <!-- Task Item 1 -->
-         @foreach ($tasks as $task)
-
-    <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 flex items-center gap-4 hover:shadow-sm transition-all group">
-
-        <input
-            class="task-checkbox w-5 h-5 rounded-full border-2 border-outline-variant text-secondary focus:ring-secondary cursor-pointer"
-            type="checkbox"
-        >
-
-        <div class="flex-grow">
-            <label class="font-body-lg text-body-lg text-on-surface block cursor-pointer transition-colors">
-                {{ $task->title }}
-            </label>
-
-            <div class="flex items-center gap-4 mt-1">
-                <span class="flex items-center gap-1 text-label-sm font-label-sm text-on-surface-variant">
-                    <span class="material-symbols-outlined text-[14px]">calendar_today</span>
-                {{ $task->due_date ? \Carbon\Carbon::parse($task->due_date)->format('M d, Y') : 'No due date' }}
-                </span>
-
-                <span class="px-2 py-0.5 bg-surface-container-high text-primary rounded text-[10px] font-bold uppercase tracking-tighter">
-                    {{ $task->category ?? 'Task' }}
-                </span>
-            </div>
-        </div>
-
-        <span class="px-2 py-1 bg-error-container text-on-error-container rounded-lg text-label-sm font-label-sm">
-{{ $task->priority }}
-        </span>
-
-      <form action="{{ route('tasks.destroy', $task->id) }}" method="POST"
-      onsubmit="return confirm('Delete this task?')">
+                    @foreach ($tasks as $task)
+                        <div
+                            class="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 flex items-center gap-4 hover:shadow-sm transition-all group">
+<form action="{{ route('tasks.update', $task->id) }}" method="POST" class="inline">
     @csrf
-    @method('DELETE')
+    @method('PUT') 
 
-    <button
-        type="submit"
-        class="material-symbols-outlined text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
-    >
-        delete
-    </button>
+    <input
+        class="task-checkbox w-5 h-5 rounded-full border-2 border-outline-variant text-secondary focus:ring-secondary cursor-pointer"
+        type="checkbox" name="completed" value="1" onchange="this.form.submit()"
+        {{ $task->completed ? 'checked' : '' }}>
 </form>
-<a href="{{ route('tasks.edit', $task->id) }}"
-   class="material-symbols-outlined text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity">
-    edit
-</a>
 
 
-    </div>
+                            <div class="flex-grow">
+                                <label
+                                    class="font-body-lg text-body-lg text-on-surface block cursor-pointer transition-colors">
+                                    {{ $task->title }}
+                                </label>
 
-@endforeach
-                 
-  
+                                <div class="flex items-center gap-4 mt-1">
+                                    <span
+                                        class="flex items-center gap-1 text-label-sm font-label-sm text-on-surface-variant">
+                                        <span class="material-symbols-outlined text-[14px]">calendar_today</span>
+                                        {{ $task->due_date ? \Carbon\Carbon::parse($task->due_date)->format('M d, Y') : 'No due date' }}
+                                    </span>
+
+                                    <span
+                                        class="px-2 py-0.5 bg-surface-container-high text-primary rounded text-[10px] font-bold uppercase tracking-tighter">
+                                        {{ $task->category ?? 'Task' }}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <span
+                                class="px-2 py-1 bg-error-container text-on-error-container rounded-lg text-label-sm font-label-sm">
+                                {{ $task->priority }}
+                            </span>
+
+                            <form action="{{ route('tasks.destroy', $task->id) }}" method="POST"
+                                onsubmit="return confirm('Delete this task?')">
+                                @csrf
+                                @method('DELETE')
+
+                                <button type="submit"
+                                    class="material-symbols-outlined text-red-500 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    delete
+                                </button>
+                            </form>
+                            <a href="{{ route('tasks.edit', $task->id) }}"
+                                class="material-symbols-outlined text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity">
+                                edit
+                            </a>
+
+
+                        </div>
+                    @endforeach
+
+
                 </div>
                 <!-- Right Column (Stats & Visual) -->
                 <div class="col-span-12 lg:col-span-4 space-y-gutter-desktop">

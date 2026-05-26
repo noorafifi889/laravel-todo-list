@@ -37,6 +37,7 @@ public function store(Request $request)
         'description' => $request->description,
         'due_date' => $request->due_date,
         'category' => $request->category,
+'completed' => $request->boolean('completed'),
         'due_time' => $request->due_time,
         'priority' => $request->priority ?? 'medium',
     ]);
@@ -65,14 +66,23 @@ public function edit(Task $task)
      */
 public function update(Request $request, Task $task)
 {
-    $task->update([
-        'title' => $request->title,
-        'description' => $request->description,
-        'due_date' => $request->due_date,
-        'due_time' => $request->due_time,
-        'priority' => $request->priority,
-        'category' => $request->category,
-    ]);
+    // إذا كان الطلب يحتوي على عنوان (قادم من صفحة التعديل الكاملة)
+    if ($request->has('title')) {
+        $task->update([
+            'title' => $request->title,
+            'description' => $request->description,
+            'due_date' => $request->due_date,
+            'due_time' => $request->due_time,
+            'completed' => $request->boolean('completed'),
+            'priority' => $request->priority,
+            'category' => $request->category,
+        ]);
+    } 
+    else {
+        $task->update([
+            'completed' => $request->boolean('completed'),
+        ]);
+    }
 
     return redirect()->route('tasks.index');
 }
