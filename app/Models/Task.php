@@ -12,6 +12,7 @@ class Task extends Model
         'due_date',
         'due_time',
         'priority',
+        'category',
         'completed'
     ];
 }
