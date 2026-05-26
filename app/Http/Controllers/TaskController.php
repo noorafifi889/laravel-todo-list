@@ -10,9 +10,20 @@ class TaskController extends Controller
     /**
      * Display a listing of the resource.
      */
- public function index()
+public function index(Request $request)
 {
-    $tasks = Task::all();
+    $query = Task::query();
+
+    if ($request->filled('priority')) {
+        $query->where('priority', $request->priority);
+    }
+
+    if ($request->filled('category')) {
+        $query->where('category', $request->category);
+    }
+
+    $tasks = $query->latest()->get();
+
     return view('tasks.index', compact('tasks'));
 }
 

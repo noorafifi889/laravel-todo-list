@@ -265,28 +265,51 @@
                 </div>
             </div>
             <!-- Filters / Chips -->
-            <div class="flex flex-wrap gap-stack-md mb-8">
-                <div class="flex items-center gap-2 pr-4 border-r border-outline-variant">
-                    <span
-                        class="text-label-sm font-label-sm text-on-surface-variant uppercase tracking-wider">Priority</span>
-                    <button
-                        class="px-3 py-1 bg-error-container text-on-error-container rounded-full text-label-sm font-label-sm hover:brightness-95 transition-all">High</button>
-                    <button
-                        class="px-3 py-1 bg-surface-variant text-on-secondary-fixed-variant rounded-full text-label-sm font-label-sm hover:brightness-95 transition-all">Medium</button>
-                    <button
-                        class="px-3 py-1 bg-secondary-container text-on-secondary-fixed-variant rounded-full text-label-sm font-label-sm hover:brightness-95 transition-all">Low</button>
-                </div>
-                <div class="flex items-center gap-2">
-                    <span
-                        class="text-label-sm font-label-sm text-on-surface-variant uppercase tracking-wider">Category</span>
-                    <button
-                        class="px-3 py-1 bg-surface-container-highest text-primary rounded-full text-label-sm font-label-sm hover:bg-primary hover:text-white transition-all">Work</button>
-                    <button
-                        class="px-3 py-1 bg-surface-container-highest text-primary rounded-full text-label-sm font-label-sm hover:bg-primary hover:text-white transition-all">Personal</button>
-                    <button
-                        class="px-3 py-1 bg-surface-container-highest text-primary rounded-full text-label-sm font-label-sm hover:bg-primary hover:text-white transition-all">Health</button>
-                </div>
-            </div>
+      <div class="flex flex-wrap gap-stack-md mb-8">
+    <div class="flex items-center gap-2 pr-4 border-r border-outline-variant">
+        <span class="text-label-sm font-label-sm text-on-surface-variant uppercase tracking-wider">Priority</span>
+        
+        <a href="{{ request('priority') == 'high' ? route('tasks.index', request()->except('priority')) : route('tasks.index', array_merge(request()->query(), ['priority' => 'high'])) }}"
+           class="px-3 py-1 rounded-full text-label-sm font-label-sm transition-all {{ request('priority') == 'high' ? 'bg-error text-white font-bold scale-105' : 'bg-error-container text-on-error-container hover:brightness-95' }}">
+           High
+        </a>
+
+        <a href="{{ request('priority') == 'medium' ? route('tasks.index', request()->except('priority')) : route('tasks.index', array_merge(request()->query(), ['priority' => 'medium'])) }}"
+           class="px-3 py-1 rounded-full text-label-sm font-label-sm transition-all {{ request('priority') == 'medium' ? 'bg-primary text-white font-bold scale-105' : 'bg-surface-variant text-on-secondary-fixed-variant hover:brightness-95' }}">
+           Medium
+        </a>
+
+        <a href="{{ request('priority') == 'low' ? route('tasks.index', request()->except('priority')) : route('tasks.index', array_merge(request()->query(), ['priority' => 'low'])) }}"
+           class="px-3 py-1 rounded-full text-label-sm font-label-sm transition-all {{ request('priority') == 'low' ? 'bg-secondary text-white font-bold scale-105' : 'bg-secondary-container text-on-secondary-fixed-variant hover:brightness-95' }}">
+           Low
+        </a>
+    </div>
+
+    <div class="flex items-center gap-2">
+        <span class="text-label-sm font-label-sm text-on-surface-variant uppercase tracking-wider">Category</span>
+        
+        <a href="{{ request('category') == 'Work' ? route('tasks.index', request()->except('category')) : route('tasks.index', array_merge(request()->query(), ['category' => 'Work'])) }}"
+           class="px-3 py-1 rounded-full text-label-sm font-label-sm transition-all {{ request('category') == 'Work' ? 'bg-primary text-white font-bold scale-105' : 'bg-surface-container-highest text-primary hover:bg-primary hover:text-white' }}">
+           Work
+        </a>
+
+        <a href="{{ request('category') == 'Personal' ? route('tasks.index', request()->except('category')) : route('tasks.index', array_merge(request()->query(), ['category' => 'Personal'])) }}"
+           class="px-3 py-1 rounded-full text-label-sm font-label-sm transition-all {{ request('category') == 'Personal' ? 'bg-primary text-white font-bold scale-105' : 'bg-surface-container-highest text-primary hover:bg-primary hover:text-white' }}">
+           Personal
+        </a>
+
+        <a href="{{ request('category') == 'Health' ? route('tasks.index', request()->except('category')) : route('tasks.index', array_merge(request()->query(), ['category' => 'Health'])) }}"
+           class="px-3 py-1 rounded-full text-label-sm font-label-sm transition-all {{ request('category') == 'Health' ? 'bg-primary text-white font-bold scale-105' : 'bg-surface-container-highest text-primary hover:bg-primary hover:text-white' }}">
+           Health
+        </a>
+    </div>
+
+    @if(request()->has('priority') || request()->has('category'))
+        <a href="{{ route('tasks.index') }}" class="text-label-sm text-red-500 hover:underline ml-auto flex items-center">
+            Clear Filters
+        </a>
+    @endif
+</div>
             <!-- Bento Layout Content -->
             <div class="grid grid-cols-12 gap-gutter-desktop">
                 <!-- Main Task List Column -->
