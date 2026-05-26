@@ -309,7 +309,7 @@
             <div class="flex items-center gap-4 mt-1">
                 <span class="flex items-center gap-1 text-label-sm font-label-sm text-on-surface-variant">
                     <span class="material-symbols-outlined text-[14px]">calendar_today</span>
-                    Due Today
+                {{ $task->due_date ? \Carbon\Carbon::parse($task->due_date)->format('M d, Y') : 'No due date' }}
                 </span>
 
                 <span class="px-2 py-0.5 bg-surface-container-high text-primary rounded text-[10px] font-bold uppercase tracking-tighter">
@@ -319,12 +319,26 @@
         </div>
 
         <span class="px-2 py-1 bg-error-container text-on-error-container rounded-lg text-label-sm font-label-sm">
-            High
+{{ $task->priority }}
         </span>
 
-        <button class="material-symbols-outlined text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity">
-            more_vert
-        </button>
+      <form action="{{ route('tasks.destroy', $task->id) }}" method="POST"
+      onsubmit="return confirm('Delete this task?')">
+    @csrf
+    @method('DELETE')
+
+    <button
+        type="submit"
+        class="material-symbols-outlined text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
+    >
+        delete
+    </button>
+</form>
+<a href="{{ route('tasks.edit', $task->id) }}"
+   class="material-symbols-outlined text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity">
+    edit
+</a>
+
 
     </div>
 
