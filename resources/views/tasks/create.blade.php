@@ -216,25 +216,29 @@
             </div>
             <!-- Form Card -->
             <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-stack-lg form-card">
-<form class="space-y-stack-lg" action="{{ route('tasks.store') }}" method="POST">
-    @csrf                    <!-- Task Title -->
-                    <div>
+                <form class="space-y-stack-lg" action="{{ $action ?? route('tasks.store') }}" method="POST">
+
+                    @csrf
+@if(isset($method))
+    @method($method)
+@endif                    <div>
                         <label
                             class="font-label-md text-label-md text-on-surface-variant block mb-stack-sm uppercase tracking-wider"
                             for="task-title">Task Title</label>
-                        <input
-                        name="title"
-                            class="w-full bg-transparent border-b-2 border-outline-variant focus:border-primary-container py-3 font-headline-md text-headline-md outline-none transition-all placeholder:text-outline"
+                        <input name="title"
+                            value="{{ old('title', $task->title ?? '') }}"
+                            class="w-full bg-transparent border-b-2 border-outline-variant focus:border-primary-container py-3
+                            font-headline-md text-headline-md outline-none transition-all placeholder:text-outline"
                             id="task-title" placeholder="What needs to be done?" type="text" />
                     </div>
                     <!-- Description -->
                     <div>
                         <label class="font-label-md text-label-md text-on-surface-variant block mb-stack-sm"
                             for="description">Description</label>
-                        <textarea
-                        name="description"
+                        <textarea name="description"
+                        {{-- value="{{ old('description', $task->description ?? '') }}" --}}
                             class="w-full rounded-lg border border-outline-variant focus:border-primary-container focus:ring-1 focus:ring-primary-container p-3 font-body-md text-body-md bg-white transition-all outline-none resize-none"
-                            id="description" placeholder="Add some details or notes..." rows="3"></textarea>
+                            id="description" placeholder="Add some details or notes..." rows="3">{{ old('description', $task->description ?? '') }}</textarea>
                     </div>
                     <!-- Grid for Date, Time, and Priority -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-stack-lg">
@@ -245,8 +249,7 @@
                             <div class="relative group">
                                 <span
                                     class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary-container">event</span>
-                                <input
-                                name="due_date"
+                                <input name="due_date" value="{{ old('due_date', $task->due_date ?? '') }}"
                                     class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-outline-variant focus:border-primary-container focus:ring-1 focus:ring-primary-container font-body-md text-body-md bg-white outline-none transition-all"
                                     id="due-date" type="date" />
                             </div>
@@ -258,8 +261,7 @@
                             <div class="relative group">
                                 <span
                                     class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary-container">schedule</span>
-                                <input
-                                name="due_time"
+                                <input value="{{ old('due_time', $task->due_time ?? '') }}" name="due_time"
                                     class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-outline-variant focus:border-primary-container focus:ring-1 focus:ring-primary-container font-body-md text-body-md bg-white outline-none transition-all"
                                     id="due-time" type="time" />
                             </div>
@@ -281,14 +283,14 @@
                                 <button
                                     class="flex-1 py-1.5 rounded-md text-label-md font-label-md transition-all text-on-surface-variant hover:bg-surface-container-high"
                                     id="btn-high" onclick="setPriority('high')" type="button">High</button>
+                                    <input type="hidden" name="priority" id="priority" value="{{ old('priority', $task->priority ?? 'medium') }}">
                             </div>
                         </div>
                         <!-- Category Selection -->
                         <div>
                             <label class="font-label-md text-label-md text-on-surface-variant block mb-stack-sm"
                                 for="category">Category</label>
-                            <select
-                                name="category"
+                            <select name="category"
                                 class="w-full px-4 py-2.5 rounded-lg border border-outline-variant focus:border-primary-container focus:ring-1 focus:ring-primary-container font-body-md text-body-md bg-white outline-none transition-all appearance-none cursor-pointer"
                                 id="category">
                                 <option value="work">💼 Work</option>
@@ -306,12 +308,12 @@
                             type="button">
                             Cancel
                         </button>
-                        <button type="submit" 
+                        <button type="submit"
                             class="w-full sm:w-auto px-8 py-3 bg-primary-container text-on-primary-container hover:bg-primary transition-all rounded-lg font-headline-md text-headline-md active:scale-95 flex items-center justify-center gap-2"
                             type="submit">
                             <span class="material-symbols-outlined" data-icon="add_task">add_task</span>
                             Create Task
-                    </button>
+                        </button>
                     </div>
                 </form>
             </div>
@@ -323,44 +325,44 @@
             </div>
         </div>
     </main>
-    <script>
-        function setPriority(level) {
-            const btns = {
-                low: document.getElementById('btn-low'),
-                medium: document.getElementById('btn-medium'),
-                high: document.getElementById('btn-high')
-            };
+  <script>
+    function setPriority(level) {
+        document.getElementById('priority').value = level;
 
-            // Reset styles
-            Object.values(btns).forEach(btn => {
-                btn.classList.remove('bg-white', 'text-secondary', 'text-tertiary', 'text-error', 'shadow-sm',
-                    'font-bold');
-                btn.classList.add('text-on-surface-variant');
-            });
+        const btns = {
+            low: document.getElementById('btn-low'),
+            medium: document.getElementById('btn-medium'),
+            high: document.getElementById('btn-high')
+        };
 
-            // Apply active styles
-            const active = btns[level];
-            active.classList.remove('text-on-surface-variant');
-            active.classList.add('bg-white', 'shadow-sm', 'font-bold');
+        Object.values(btns).forEach(btn => {
+            btn.classList.remove(
+                'bg-white',
+                'text-secondary',
+                'text-tertiary',
+                'text-error',
+                'shadow-sm',
+                'font-bold'
+            );
 
-            if (level === 'low') active.classList.add('text-secondary');
-            if (level === 'medium') active.classList.add('text-tertiary');
-            if (level === 'high') active.classList.add('text-error');
-        }
-
-        // Simple scale effect for the card on entry
-        document.addEventListener('DOMContentLoaded', () => {
-            const card = document.querySelector('.form-card');
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(10px)';
-            card.style.transition = 'all 0.4s ease-out';
-
-            setTimeout(() => {
-                card.style.opacity = '1';
-                card.style.transform = 'translateY(0)';
-            }, 100);
+            btn.classList.add('text-on-surface-variant');
         });
-    </script>
+
+        const active = btns[level];
+
+        active.classList.remove('text-on-surface-variant');
+        active.classList.add('bg-white', 'shadow-sm', 'font-bold');
+
+        if (level === 'low') active.classList.add('text-secondary');
+        if (level === 'medium') active.classList.add('text-tertiary');
+        if (level === 'high') active.classList.add('text-error');
+    }
+
+    // لما تفتح صفحة edit يحدد الزر الحالي تلقائياً
+    document.addEventListener('DOMContentLoaded', () => {
+        setPriority(document.getElementById('priority').value);
+    });
+</script>
 </body>
 
 </html>
