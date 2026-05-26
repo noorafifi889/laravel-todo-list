@@ -36,6 +36,7 @@ public function store(Request $request)
         'title' => $request->title,
         'description' => $request->description,
         'due_date' => $request->due_date,
+        'category' => $request->category,
         'due_time' => $request->due_time,
         'priority' => $request->priority ?? 'medium',
     ]);
@@ -54,23 +55,27 @@ public function store(Request $request)
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Task $task)
-    {
-        //
-    }
+public function edit(Task $task)
+{
+    return view('tasks.edit', compact('task'));
+}
 
     /**
      * Update the specified resource in storage.
      */
-  public function update(Task $task)
+public function update(Request $request, Task $task)
 {
     $task->update([
-        'completed' => !$task->completed
+        'title' => $request->title,
+        'description' => $request->description,
+        'due_date' => $request->due_date,
+        'due_time' => $request->due_time,
+        'priority' => $request->priority,
+        'category' => $request->category,
     ]);
 
-    return redirect()->back();
+    return redirect()->route('tasks.index');
 }
-
     /**
      * Remove the specified resource from storage.
      */
