@@ -19,7 +19,7 @@ return new class extends Migration
         $table->time('due_time')->nullable();
 
 $table->enum('priority', ['low', 'medium', 'high'])->default('medium');
-
+$table->enum('category', ['work', 'personal', 'health' ,"Finance" ,'Other']);
         $table->boolean('completed')->default(false);
         $table->timestamps();
     });
