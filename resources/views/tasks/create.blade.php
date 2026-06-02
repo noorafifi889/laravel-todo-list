@@ -164,9 +164,9 @@
 <body class="bg-background text-on-background min-h-screen overflow-x-hidden">
     <!-- SideNavBar (Shared Component Anchor) -->
     <aside
-        class="h-screen w-64 fixed left-0 top-0 bg-surface-container-low dark:bg-surface-dim shadow-sm flex flex-col h-full py-stack-lg px-stack-md z-50">
+        class="h-screen w-64 fixed left-0 top-0 bg-surface-container-low shadow-sm flex flex-col h-full py-stack-lg px-stack-md z-50">
         <div class="mb-stack-lg px-4">
-            <h1 class="text-headline-md font-headline-md font-black text-primary dark:text-primary-fixed-dim">Focus</h1>
+            <h1 class="text-headline-md font-headline-md font-black text-primary">Focus</h1>
             <p class="text-label-md font-label-md text-on-surface-variant">Productivity Workspace</p>
         </div>
         <nav class="flex-grow space-y-1">
